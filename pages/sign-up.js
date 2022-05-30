@@ -6,7 +6,7 @@ export default function SignUp() {
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "50vh" }}
+      style={{ minHeight: "75vh" }}
     >
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <SignUpComponent />

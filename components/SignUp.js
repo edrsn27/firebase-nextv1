@@ -1,20 +1,52 @@
 import React, { useState } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import { Alert, Card, Form, Button } from "react-bootstrap";
 import { useAuth } from "./context/AuthContext";
+import Link from "next/link";
+function SuccessMessage() {
+  return (
+    <>
+      Account created! <br />
+      <Link href="/">Login Page</Link>. Give it a click if you want to login.
+    </>
+  );
+}
+
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    signup(email, password);
+
+    setSuccess("");
+    setError("");
+
+    if (password == "") return setError("Password field required!");
+    if (password != confirmPassword) return setError("Password doesn't match");
+
+    setLoading(true);
+
+    try {
+      await signup(email, password);
+      setSuccess(<SuccessMessage />);
+    } catch (error) {
+      setError(error.message);
+    }
+    setLoading(false);
   };
   return (
     <Card>
       <h2 className="text-center mb-4">Sign up</h2>
+
       <Card.Body>
+        {success && <Alert variant="success">{success}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
+
         <Form onSubmit={submit}>
           <Form.Group className="mb-3" controlId="formEmail">
             <Form.Label>Email address</Form.Label>
@@ -49,7 +81,12 @@ export default function SignUp() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="m">
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-100"
+            disabled={loading}
+          >
             Submit
           </Button>
         </Form>

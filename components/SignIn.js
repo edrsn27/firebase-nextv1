@@ -65,7 +65,7 @@ export default function SignIn() {
           Doesn't have an account ? <Link href="/sign-up">Create account</Link>
         </p>
         <p className="text-muted mb-4 ">
-          <Link href="/sign-up">Forgot Password</Link>
+          <Link href="/forgot-password">Forgot Password</Link>
         </p>
       </Card.Body>
     </Card>

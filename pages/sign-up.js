@@ -1,6 +1,7 @@
 import React from "react";
 import SignUpComponent from "../components/SignUp";
 import { Container } from "react-bootstrap";
+
 export default function SignUp() {
   return (
     <Container

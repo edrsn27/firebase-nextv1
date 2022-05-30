@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut
 } from "firebase/auth";
 import { auth } from "../../firebase-config";
 const AuthContext = createContext();
@@ -23,7 +24,7 @@ export default function AuthProvider({ children }) {
   }
 
   function signout() {
-    return auth.signOut();
+    return signOut(auth);
   }
 
   function passwordResetEmail(email) {
@@ -36,7 +37,7 @@ export default function AuthProvider({ children }) {
 
     return unsubscribe;
   }, []);
-  
+
   const value = {
     currentUser,
     signup,

@@ -1,50 +1,32 @@
 import React, { useState } from "react";
 import { Alert, Card, Form, Button } from "react-bootstrap";
 import { useAuth } from "./context/AuthContext";
+import { useRouter } from "next/router";
 import Link from "next/link";
-function SuccessMessage() {
-  return (
-    <>
-      Account created! <br />
-      <Link href="/">Login Page</Link>. Give it a click if you want to login.
-    </>
-  );
-}
-
-export default function SignUp() {
+export default function SignIn() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signin, currentUser } = useAuth();
   const submit = async (e) => {
     e.preventDefault();
-
-    setSuccess("");
-    setError("");
-
-    if (password == "") return setError("Password field required!");
-    if (password != confirmPassword) return setError("Password doesn't match");
-
     setLoading(true);
-
     try {
-      await signup(email, password);
-      setSuccess(<SuccessMessage />);
+      await signin(email, password);
+      router.push("/dashboard");
     } catch (error) {
       setError(error.message);
     }
     setLoading(false);
   };
+
   return (
     <Card>
-      <h2 className="text-center mb-4">Sign up</h2>
-
+      <h2 className="text-center mb-4">Sign In</h2>
       <Card.Body>
-        {success && <Alert variant="success">{success}</Alert>}
         {error && <Alert variant="danger">{error}</Alert>}
 
         <Form onSubmit={submit}>
@@ -56,9 +38,6 @@ export default function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formPassword">
@@ -71,29 +50,22 @@ export default function SignUp() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formConfirmPassword">
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Confrim password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </Form.Group>
-
           <Button
             variant="primary"
             type="submit"
             className="w-100"
             disabled={loading}
           >
-            Submit
+            {loading ? "Loggin in..." : "Submit"}
           </Button>
         </Form>
         <hr />
 
         <p className="text-muted mb-4 ">
-          Have an Account? <Link href="/">Sign in</Link>
+          Doesn't have an account ? <Link href="/sign-up">Create account</Link>
+        </p>
+        <p className="text-muted mb-4 ">
+          <Link href="/sign-up">Forgot Password</Link>
         </p>
       </Card.Body>
     </Card>
